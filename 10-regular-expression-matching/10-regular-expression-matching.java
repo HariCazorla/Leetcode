@@ -1,9 +1,15 @@
-class Solution {
+class Solution {    
     public boolean isMatch(String s, String p) {
-        return dp(0, 0, s, p);
+        Boolean map[][] = new Boolean [s.length()+1][p.length()+1];
+        return dp(0, 0, s, p, map);
     }
     
-    public boolean dp(int i, int j, String s, String p) {
+    public boolean dp(int i, int j, String s, String p, Boolean map[][]) {
+        
+        if (map[i][j] != null) {
+            return map[i][j];
+        }
+        
         if ((i > s.length() - 1) && (j > p.length() - 1)) {
             return true;
         }
@@ -19,13 +25,16 @@ class Solution {
         }
         
         if ((j + 1 < p.length()) && p.charAt(j + 1) == '*') {
-            return ((dp(i, j+2, s, p)) || (match && dp(i+1, j, s, p)));
+            map[i][j] = ((dp(i, j+2, s, p, map)) || (match && dp(i+1, j, s, p, map)));
+            return map[i][j];
         }
         
         if (match) {
-            return dp(i+1, j+1, s, p);
+            map[i][j] = dp(i+1, j+1, s, p, map);
+            return map[i][j];
         } else {
-            return false;
+            map[i][j] = false;
+            return map[i][j];
         }
     }
 }
